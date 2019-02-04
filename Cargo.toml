@@ -1,0 +1,10 @@
+[package]
+name = "glfw"
+version = "0.1.0"
+authors = ["Aurel Feer <aurel.feer@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+
+[dependencies.glfw]
+git = "https://github.com/bjz/glfw-rs.git"
