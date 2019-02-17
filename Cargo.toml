@@ -6,5 +6,7 @@ edition = "2018"
 
 [dependencies]
 
+noise = "0.5.1"
+
 [dependencies.glfw]
 git = "https://github.com/bjz/glfw-rs.git"
