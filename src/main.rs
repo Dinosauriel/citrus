@@ -1,7 +1,10 @@
 extern crate glfw;
 extern crate gl;
+extern crate noise;
 
-use gl::types::*;
+mod util;
+mod glue;
+
 use glfw::{Action, Context, Key};
 use noise::{NoiseFn, Perlin};
 

@@ -1,6 +1,8 @@
 use gl;
 use std;
-use std::ffi::{CStr, CString};
+use crate::util::cstring;
+use std::ffi::CStr;
+
 
 pub struct Program {
 	id: gl::types::GLuint,
@@ -31,7 +33,7 @@ impl Program {
 				gl::GetProgramiv(program_id, gl::INFO_LOG_LENGTH, &mut len);
 			}
 
-			let error = create_whitespace_cstring_with_len(len as usize);
+			let error = cstring::create_whitespace_cstring_with_len(len as usize);
 
 			unsafe {
 				gl::GetProgramInfoLog(
@@ -122,7 +124,7 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::type
 			gl::GetShaderiv(id, gl::INFO_LOG_LENGTH, &mut len);
 		}
 
-		let error = create_whitespace_cstring_with_len(len as usize);
+		let error = cstring::create_whitespace_cstring_with_len(len as usize);
 
 		unsafe {
 			gl::GetShaderInfoLog(
@@ -137,13 +139,4 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::type
 	}
 
 	Ok(id)
-}
-
-fn create_whitespace_cstring_with_len(len: usize) -> CString {
-	// allocate buffer of correct size
-	let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
-	// fill it with len spaces
-	buffer.extend([b' '].iter().cycle().take(len));
-	// convert buffer to CString
-	unsafe { CString::from_vec_unchecked(buffer) }
 }
