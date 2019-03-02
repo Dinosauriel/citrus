@@ -6,10 +6,11 @@ mod util;
 mod glue;
 
 use glfw::{Action, Context, Key};
-use noise::{NoiseFn, Perlin};
+use std::ffi::CString;
+//use noise::{NoiseFn, Perlin};
 
-static TICK_RATE: i64 = 64; //updates of the game logic per second
-static INGAME_TICK_RATE: i64 = 64; //units of ingame time per second. influences game speed
+//static TICK_RATE: i64 = 64; //updates of the game logic per second
+//static INGAME_TICK_RATE: i64 = 64; //units of ingame time per second. influences game speed
 
 fn main() {
 	let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
@@ -21,10 +22,24 @@ fn main() {
 	window.make_current();
 
 
-	let perlin = Perlin::new();
-	let val = perlin.get([42.4, 37.7, 2.8]);
+	//let perlin = Perlin::new();
+	//let val = perlin.get([42.4, 37.7, 2.8]);
 
-	let gl = gl::load_with(|s| window.get_proc_address(s));
+	let vert_shader = glue::shader::Shader::from_vert_source(
+		&CString::new(include_str!("assets/shaders/triangle.vert")).unwrap()
+	).unwrap();
+
+	let frag_shader = glue::shader::Shader::from_frag_source(
+		&CString::new(include_str!("assets/shaders/triangle.frag")).unwrap()
+	).unwrap();
+
+	let shader_program = glue::program::Program::from_shaders(
+    	&[vert_shader, frag_shader]
+	).unwrap();
+
+	shader_program.set_used();
+
+	/*let gl = */gl::load_with(|s| window.get_proc_address(s));
 	glfw.set_swap_interval(glfw::SwapInterval::Sync(1));
 
 	while !window.should_close() {

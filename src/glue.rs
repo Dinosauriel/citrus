@@ -1,3 +1,3 @@
 
-mod shader;
-mod program;
+pub mod shader;
+pub mod program;
