@@ -1,11 +1,12 @@
 [package]
-name = "glfw"
+name = "Citrus"
 version = "0.1.0"
 authors = ["Aurel Feer <aurel.feer@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 noise = "0.5.1"
+gfx = "0.18.0"
 
 [dependencies.glfw]
 git = "https://github.com/bjz/glfw-rs.git"
