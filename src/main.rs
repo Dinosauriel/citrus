@@ -1,5 +1,4 @@
 extern crate glfw;
-extern crate gl;
 extern crate noise;
 
 mod util;
@@ -23,83 +22,8 @@ fn main() {
 	window.set_key_polling(true);
 	window.make_current();
 
-	gl::load_with(|s| window.get_proc_address(s));
-	glfw.set_swap_interval(glfw::SwapInterval::Sync(1));
-
-	//let perlin = Perlin::new();
-	//let val = perlin.get([42.4, 37.7, 2.8]);
-
-	let vert_shader = glue::shader::Shader::from_vert_source(
-		&CString::new(include_str!("assets/shaders/triangle.vert")).unwrap()
-	).unwrap();
-
-	let frag_shader = glue::shader::Shader::from_frag_source(
-		&CString::new(include_str!("assets/shaders/triangle.frag")).unwrap()
-	).unwrap();
-
-	let shader_program = glue::program::Program::from_shaders(
-    	&[vert_shader, frag_shader]
-	).unwrap();
-
-	shader_program.set_used();
-
-	let vertices: Vec<f32> = vec![
-		-0.5, -0.5, 0.0,
-		0.5, -0.5, 0.0,
-		0.0, 0.5, 0.0
-	];
-
-	let mut vbo: gl::types::GLuint = 0;
-	unsafe {
-		gl::GenBuffers(1, &mut vbo);
-	}
-
-	unsafe {
-		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-		gl::BufferData(
-			gl::ARRAY_BUFFER, // target
-			(vertices.len() * std::mem::size_of::<f32>()) as gl::types::GLsizeiptr, // size of data in bytes
-			vertices.as_ptr() as *const gl::types::GLvoid, // pointer to data
-			gl::STATIC_DRAW, // usage
-		);
-		gl::BindBuffer(gl::ARRAY_BUFFER, 0); // unbind the buffer
-	}
-
-	let mut vao: gl::types::GLuint = 0;
-	unsafe {
-		gl::GenVertexArrays(1, &mut vao);
-	}
-
-	unsafe {
-		gl::BindVertexArray(vao);
-		
-		gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-		gl::EnableVertexAttribArray(0); // this is "layout (location = 0)" in vertex shader
-		gl::VertexAttribPointer(
-			0, // index of the generic vertex attribute ("layout (location = 0)")
-			3, // the number of components per generic vertex attribute
-			gl::FLOAT, // data type
-			gl::FALSE, // normalized (int-to-float conversion)
-			(3 * std::mem::size_of::<f32>()) as gl::types::GLint, // stride (byte offset between consecutive attributes)
-			std::ptr::null() // offset of the first component
-		);
-
-		gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-		gl::BindVertexArray(0);
-	}
-
 	while !window.should_close() {
 		glfw.poll_events();
-
-		shader_program.set_used();
-		unsafe {
-			gl::BindVertexArray(vao);
-			gl::DrawArrays(
-				gl::TRIANGLES, // mode
-				0, // starting index in the enabled arrays
-				3 // number of indices to be rendered
-			);
-		}
 
 		window.swap_buffers();
 	}
